@@ -4,12 +4,12 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as Location from 'expo-location';
-import { TASK } from './src/task';
-import TeamMap from './src/TeamMap';
+import { TASK } from './task';
+import TeamMap from './TeamMap';
 import {
   NICK_RE, api, cleanCode, createGroup, fmtCode, joinGroup, leaveGroup, loadRoster, loadState,
   normServer, parseInvite, resetRoster, saveRoster, saveState,
-} from './src/team';
+} from './team';
 
 const M_TO_FT = 3.28084;
 const MS_TO_KT = 1.94384;
