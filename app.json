@@ -17,11 +17,7 @@
         "FOREGROUND_SERVICE_LOCATION",
         "POST_NOTIFICATIONS",
         "WAKE_LOCK"
-      ],
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-foreground.png",
-        "backgroundColor": "#090e17"
-      }
+      ]
     },
     "plugins": [
       [
@@ -40,7 +36,6 @@
           }
         }
       ]
-    ],
-    "icon": "./assets/icon.png"
+    ]
   }
 }
