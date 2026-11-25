@@ -9,6 +9,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [master, client]
+    env:
+      APP_VARIANT: ${{ matrix.variant }}
+      EXPO_PUBLIC_APP_VARIANT: ${{ matrix.variant }}
     steps:
       - uses: actions/checkout@v4
 
@@ -44,5 +51,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: aeronav-team-apk
+          name: aeronav-team-${{ matrix.variant }}-apk
           path: android/app/build/outputs/apk/release/app-release.apk
