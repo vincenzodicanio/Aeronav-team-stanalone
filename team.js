@@ -1,5 +1,6 @@
 // Protocollo Team Live: identico a team-client.js di Aeronav (stesso server, stessi endpoint).
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CLIENT_SCHEME, INVITE_PAGE } from './config';
 
 const KEY = 'aeronav.team.app.v1';      // { server, nick, code, uid, token, groupName }
 const RKEY = 'aeronav.team.roster.v1';  // { online, members, sentAt, error, lost }
@@ -13,15 +14,26 @@ export function normServer(v) {
   return /^https?:\/\/[^\s/]+/i.test(s) ? s : null;
 }
 
-// Accetta un codice (TG99-73E2) oppure un link d'invito (...?join=TG9973E2&srv=https://...)
+function qparam(t, names) {
+  for (const n of names) {
+    const m = t.match(new RegExp('[?&]' + n + '=([^&#\\s]+)', 'i'));
+    if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  }
+  return null;
+}
+
+// Accetta il link d'invito (https://.../join.html?c=CODICE&s=SERVER oppure aeronavteam://join?c=..&s=..,
+// e anche il vecchio formato di Aeronav ?join=..&srv=..) oppure il solo codice.
 export function parseInvite(text) {
   const t = String(text || '').trim();
-  const m = t.match(/[?&]join=([^&#\s]+)/i);
-  if (m) {
-    const s = t.match(/[?&]srv=([^&#\s]+)/i);
-    return { code: cleanCode(decodeURIComponent(m[1])), server: s ? normServer(decodeURIComponent(s[1])) : null };
-  }
+  const c = qparam(t, ['c', 'code', 'join']);
+  if (c != null) return { code: cleanCode(c), server: normServer(qparam(t, ['s', 'srv', 'server'])) };
   return { code: cleanCode(t), server: null };
+}
+
+export function inviteLinks(server, code) {
+  const q = 'c=' + encodeURIComponent(code) + '&s=' + encodeURIComponent(server);
+  return { web: INVITE_PAGE + '?' + q, app: CLIENT_SCHEME + '://join?' + q };
 }
 
 export async function loadState() {
