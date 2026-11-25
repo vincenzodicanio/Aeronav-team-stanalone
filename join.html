@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aeronav Team - Invito</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:#090e17;color:#e2e8f0;font-family:system-ui,sans-serif;text-align:center}
+  .card{max-width:380px;width:100%}
+  h1{color:#f59e0b;letter-spacing:2px;font-size:20px;margin:0 0 6px}
+  p{color:#94a3b8;font-size:14px;line-height:1.5}
+  .code{font-size:34px;font-weight:800;letter-spacing:3px;color:#22c55e;margin:14px 0}
+  a.btn{display:block;background:#15803d;color:#fff;text-decoration:none;font-weight:800;letter-spacing:1px;padding:16px;border-radius:10px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>AERONAV TEAM</h1>
+  <p>Invito al gruppo</p>
+  <div class="code" id="code">…</div>
+  <a class="btn" id="open" href="#">APRI NELL'APP</a>
+  <p>Serve l'app <b>Aeronav Team Client</b> installata su questo telefono.</p>
+</div>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var c = (q.get('c') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  var s = q.get('s') || '';
+  var codeEl = document.getElementById('code');
+  var btn = document.getElementById('open');
+  if (c.length < 4 || !/^https?:\/\//i.test(s)) {
+    codeEl.textContent = 'Invito non valido';
+    btn.style.display = 'none';
+    return;
+  }
+  codeEl.textContent = c.length === 8 ? c.slice(0, 4) + '-' + c.slice(4) : c;
+  var rest = 'join?c=' + encodeURIComponent(c) + '&s=' + encodeURIComponent(s);
+  var intent = 'intent://' + rest + '#Intent;scheme=aeronavteam;package=it.aeronav.team.client;end';
+  var direct = 'aeronavteam://' + rest;
+  var android = /android/i.test(navigator.userAgent);
+  btn.href = android ? intent : direct;
+  if (android) setTimeout(function () { location.href = intent; }, 400);
+})();
+</script>
+</body>
+</html>
